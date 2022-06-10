@@ -21,7 +21,7 @@ Authors: Ignacio Carlucho - Mariano De Paula - Gerardo Acosta
 
 - numpy 
 - python 2.7 
-- ICSS Simulator (Linear_Model_ICSS_opt.mat)
+- ICSS Simulator (Linear_Model_ICSS_opt.mat and canal_simulator_step.m files)
 
 ## How to run: 
 
