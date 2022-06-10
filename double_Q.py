@@ -1,7 +1,9 @@
-import numpy as np
-from generate_k_table_pioneer_6 import generate_k_table_pioneer_6, generate_k_table_pioneer_4, generate_k_table_pioneer_3, generate_k_table_pioneer_2
-import time
+# Alamiyan: THis file has been modified. Add generate_k_table_8 and generate_k_table_16
 
+import numpy as np
+from generate_k_table import generate_k_table_16, generate_k_table_8, generate_k_table_6, generate_k_table_4, generate_k_table_3, generate_k_table_2
+import time
+# ______________________________________________________________________________________________________________________
 np.random.seed(1234)
 
 # Q cheat and get_action_index are the bottle necks. 
@@ -30,12 +32,8 @@ c = DQPID(np.array([[0., 2.]]),1.,2.,[0.0, 0.0, 0.0, 0.01, 0.01, 0.01],3., 7., 0
 a.identify_nearest_centroid([1.,1.])
 '''
 
-
-
 class DQPID():
-         
-    
-    
+# ______________________________________________________________________________________________________________________
     # the constructor takes 0.006s. it is quite fast. 
     def __init__ (self, centroids, ascendence, depth, k_centroids, k_size, maximum_depth, action_index = 0., Q_cheat = 0. , K_step = 0.3 ):
 
@@ -70,7 +68,7 @@ class DQPID():
         #print(end -start)
         if self.depth == 1: 
             #this is the first object
-            self.h = np.array([self.centroids, 0.])
+            self.h = np.array([self.centroids, 0.], dtype=object)
             self.max_state = +self.DELTA_STATE
             self.min_state = -self.DELTA_STATE
             for _ in range(self.control_variables):
@@ -117,14 +115,18 @@ class DQPID():
         #print(end2-start)
 
         # create k_table
+        if self.control_variables == 16:
+            self.k_table = generate_k_table_16(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
+        if self.control_variables == 8:
+            self.k_table = generate_k_table_8(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
         if self.control_variables == 6:
-            self.k_table = generate_k_table_pioneer_6(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
+            self.k_table = generate_k_table_6(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
         if self.control_variables == 4:
-            self.k_table = generate_k_table_pioneer_4(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
+            self.k_table = generate_k_table_4(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
         if self.control_variables == 3:
-            self.k_table = generate_k_table_pioneer_3(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
+            self.k_table = generate_k_table3(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
         if self.control_variables == 2:
-            self.k_table = generate_k_table_pioneer_2(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
+            self.k_table = generate_k_table_2(self.number_of_actions, self.k_step, self.k_min, self.k_max, self.k_size )
         
         # create Q_table
         # optimized method
@@ -155,12 +157,9 @@ class DQPID():
 
         end3 = time.time()
         #print('el tiempo de ejecucione interno',end3 -start)   
-
-       
+# ______________________________________________________________________________________________________________________
     def identify_nearest_centroid(self, state):
 
-
-        
         distance_to_centroid = np.zeros(self.number_of_centroids)
         for _ in range(self.number_of_centroids):
             distance_to_centroid[_]=  np.linalg.norm(np.subtract(state, self.centroids[_])  )
@@ -170,16 +169,15 @@ class DQPID():
         
 
         return index_of_near_centroid, min_distance_to_centroid
-        
-    
-    
+# ______________________________________________________________________________________________________________________
     def get_new_centroid(self,new_centroid):
 
         #TODO add a checking mechanism to see if this new centroid it is really a new centroid
-        self.number_of_centroids = self.number_of_centroids + 1 
-        print('self.centroids',self.centroids,'new_centroid',new_centroid)
+        self.number_of_centroids = self.number_of_centroids + 1
+        print('len self.centroids =', len(self.centroids), 'new_centroid =',np.round(new_centroid[0:int(len(new_centroid) / 2)], 3))
+        # print('self.centroids', np.round(self.centroids[0:int(len(new_centroid)/2)], 3), 'new_centroid',np.round(new_centroid[0:int(len(new_centroid)/2)],3))
         self.centroids = np.vstack((self.centroids, new_centroid))
-        print(self.centroids)
+        # print(np.round(self.centroids[0:int(len(new_centroid)/2)], 3))
         new_Q_A_row = np.zeros(self.number_of_actions)
         new_Q_B_row = np.zeros(self.number_of_actions)
         for _ in range(self.number_of_actions):
@@ -191,7 +189,7 @@ class DQPID():
         # returns the index of the new centroid
         new_centroid_index = self.number_of_centroids-1
         return new_centroid_index
-    
+# ______________________________________________________________________________________________________________________
     def update_Q(self, centroid_index, action_index, reward, Q_max_next_value,flag_ab):
         
         #print('centroid_index',centroid_index)
@@ -199,10 +197,8 @@ class DQPID():
         if flag_ab == 'A':
             self.Q_A[centroid_index][action_index] = self.Q_A[centroid_index][action_index] + self.ALPHA*(reward + self.GAMMA*Q_max_next_value -  self.Q_A[centroid_index][action_index]) 
         else:
-            self.Q_B[centroid_index][action_index] = self.Q_B[centroid_index][action_index] + self.ALPHA*(reward + self.GAMMA*Q_max_next_value -  self.Q_B[centroid_index][action_index]) 
-
-    
-
+            self.Q_B[centroid_index][action_index] = self.Q_B[centroid_index][action_index] + self.ALPHA*(reward + self.GAMMA*Q_max_next_value -  self.Q_B[centroid_index][action_index])
+# ______________________________________________________________________________________________________________________
     # it works but it takes 0.05 s
     def get_action_index(self, action):
         #start = time.time()
