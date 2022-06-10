@@ -21,6 +21,7 @@ Authors: Ignacio Carlucho - Mariano De Paula - Gerardo Acosta
 
 - numpy 
 - python 2.7 
+- ICSS Simulator 
 
 ## How to run: 
 
