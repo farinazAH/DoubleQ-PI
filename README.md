@@ -33,5 +33,5 @@ with the parameters configured in the dictionary.
 
 
 ## References: 
-- **"Double Q-PI architecture for smart model-free control of canals"** ([https://www.sciencedirect.com/science/article/abs/pii/S0168169922002575?via%3Dihub])
+- **"Double Q-PI architecture for smart model-free control of canals"** [Link]([https://www.sciencedirect.com/science/article/abs/pii/S0168169922002575?via%3Dihub])
 - **Incremental Q-learning strategy for adaptive PID control of mobile robots** Carlucho et al. [Link](https://www.sciencedirect.com/science/article/pii/S0957417417301513)
