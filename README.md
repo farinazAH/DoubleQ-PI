@@ -6,7 +6,7 @@ The algorithm is also known as DQPI. From the article:
 As appears in Computers and Electronics in Agriculture.
 
 Authors: Kazem Shahverdi - Farinaz Alamiyan-Harandi - J.M.Maestre
-
+![alt text](https://github.com/farinazAH/DoubleQ-PI/blob/master/Canal_RL_Details.pdf)
 
 # Double Q-PID
 
